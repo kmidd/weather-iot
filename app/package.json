@@ -1,0 +1,17 @@
+{
+  "name": "weather_iot",
+  "version": "1.0.0",
+  "description": "IOT Application to recieve and display weather data",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kevin Middleton",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "async": "^2.5.0",
+    "express": "^4.16.2",
+    "sqlite3": "^3.1.13"
+  }
+}
