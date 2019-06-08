@@ -13,6 +13,7 @@ function listening() {
 
 app.get('/iot/:station/readings', session_readings_hdlr.save_iot_session_data);  // TODO: change to post
 app.get('/iot/readings/latest', session_readings_hdlr.get_latest_session_data);
+app.get('/iot/readings/month/maxmin/:monthYear', session_readings_hdlr.getMaxMinByMonth);
 app.get('/iot/readings', session_readings_hdlr.get_all_session_data);
 
 app.use(express.static(__dirname + "/../static"));

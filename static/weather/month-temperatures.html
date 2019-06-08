@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Line Chart</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" type="text/javascript"></script>
+  <script src="../node_modules/chart.js/dist/Chart.min.js" type="text/javascript"></script>
+  <style>
+    canvas {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div style="width:1000px">
+    <canvas id="tempChart"></canvas>
+  </div>
+  <br>
+  <br>
+  <script type="text/javascript">
+
+    let dateFormat = 'MMMM DD YYYY';
+    let date = moment('April 01 2017', dateFormat);
+    let data = {};
+
+    let ctx = document.getElementById('tempChart').getContext('2d');
+    ctx.canvas.width = 1000;
+    ctx.canvas.height = 700;
+    let color = Chart.helpers.color;
+    let cfg = {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: []
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Temperatures'
+        },
+        responsive: true,
+        scales: {
+          xAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Day of Month'
+            },
+            ticks: {
+              major: {
+                fontStyle: 'bold',
+                fontColor: '#FF0000'
+              }
+            }
+          }],
+          yAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Degrees Centegrade'
+            }
+          }]
+        }
+      }
+    };
+
+    let chart;
+    const metas = [{ label: 'max', colour: 'red' }, { label: 'min', colour: 'green' }, { label: 'mean', colour: 'blue' }];
+
+    fetch('http://raspberrypi:8080/iot/readings/month/maxmin/2019-05')
+      .then(response => response.json())
+      .then(d => {
+        cfg.data.labels = d.data.readings.map(r => r.day);
+        metas.forEach((m, i) => {
+          cfg.data.datasets.push({
+            label: '',
+            data: [],
+            borderColor: '',
+            fill: false,
+            //lineTension: 0,
+          });
+          cfg.data.datasets[i].label = m.label;
+          cfg.data.datasets[i].borderColor = m.colour;
+          cfg.data.datasets[i].data = d.data.readings.map(r => r[m.label]);
+        });
+        console.log(cfg);
+        chart = new Chart(ctx, cfg);
+      })
+      .catch(err => {
+        console.error('An error ocurred', err);
+      });
+
+  </script>
+
+</html>
